@@ -1,6 +1,6 @@
 d3.geom.distanceLimitedVoronoi = function () {
   /////// Internals ///////
-  var voronoi = d3.geom.voronoi;
+  var voronoi = d3.geom.voronoi();
   var limit = 20;             // default limit
   
   function _distanceLimitedVoronoi () {};   // constructor ???
@@ -11,14 +11,12 @@ d3.geom.distanceLimitedVoronoi = function () {
 
   _distanceLimitedVoronoi.data = function(data) {
     var voronoiLayout = voronoi(data);
-    debugger
     var result = voronoiLayout.map(function(cell) {
       return {
         path: distanceLimitedCell (cell, limit),
         point: cell.point
       }
     });
-    
     return result;
   };
   
@@ -30,22 +28,22 @@ d3.geom.distanceLimitedVoronoi = function () {
   };
   
   _distanceLimitedVoronoi.x = function(_) {
-    if (!arguments.length) return voronoi.x;
-    voronoi.x = _;
+    if (!arguments.length) return voronoi.x();
+    voronoi.x(_);
     
     return _distanceLimitedVoronoi;
   };
   
   _distanceLimitedVoronoi.y = function(_) {
-    if (!arguments.length) return voronoi.y;
-    voronoi.y = _;
+    if (!arguments.length) return voronoi.y();
+    voronoi.y(_);
     
     return _distanceLimitedVoronoi;
   };
   
   _distanceLimitedVoronoi.clipExtent = function(_) {
-    if (!arguments.length) return voronoi.clipExtent;
-    voronoi.clipExtent = _;
+    if (!arguments.length) return voronoi.clipExtent();
+    voronoi.clipExtent(_);
     
     return _distanceLimitedVoronoi;
   };
