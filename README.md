@@ -3,17 +3,18 @@ D3 plugin which computes a Voronoi tesselation where each cell defines a region 
 
 #### Context
 
-As stated in the first sentence of the README file  of the d3-voronoi repository
+As stated in the first sentence of the README file of the [d3-voronoi repository](https://github.com/d3/d3/wiki/Voronoi-Geom):
 
 > Voronoi layouts are particularly useful for invisible interactive regions, as demonstrated in Nate Vack’s [Voronoi picking](http://bl.ocks.org/njvack/1405439) example
 
 But this cited example also shows that interractive regions should be close to each point/subjectOfMatter. In other words, if the interactive region is far away from the subject of matter, interaction becomes confusing.
 
-In its example, Nate Vack uses SVG's clipPath technique to limit Voronoï-based interactive region. This plugin mimic the final result by computing the adequate region for each subject of matter. The adequate region is the intersection area between the Voronoï cell and a max-distance circle.
+In its example, Nate Vack uses SVG's clipPath technique to cut off Voronoï-based interactive regions. This plugin mimic the final result by computing the adequate distance-limited region around each subject of matter. The adequate region is the intersection area between the Voronoï cell and a max-distance circle.
 
 #### Examples
 
-* This [block](href='http://bl.ocks.org/Kcnarf/4de291d8b2d1e6501990540d87bc1baf') uses this __d3.geom.limitedDistanceVoronoi__ plugin.
+* This [block](http://bl.ocks.org/Kcnarf/6d5ace3aa9cc1a313d72b810388d1003) is a revisite of Nate Vack’s _Voronoi picking_ example
+* This [block](http://bl.ocks.org/Kcnarf/4de291d8b2d1e6501990540d87bc1baf) uses the __d3.geom.limitedDistanceVoronoi__ plugin in a real case study
 
 #### Usages
 In your HTML file, load the plugin after loading D3. The result may look like:
