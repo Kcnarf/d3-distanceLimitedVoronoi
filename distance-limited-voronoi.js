@@ -1,4 +1,4 @@
-d3.layout.beeswarm = function () {
+d3.geom.distanceLimitedVoronoi = function () {
   /////// Inputs ///////
   var limit = 20;             // default limit
   
