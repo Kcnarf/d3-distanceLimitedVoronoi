@@ -3,7 +3,14 @@ d3.geom.distanceLimitedVoronoi = function () {
   var voronoi = d3.geom.voronoi();
   var limit = 20;             // default limit
   
-  function _distanceLimitedVoronoi () {};   // constructor ???
+  function _distanceLimitedVoronoi (data) {
+    return voronoi(data).map(function(cell) {
+      return {
+        path: distanceLimitedCell (cell, limit),
+        point: cell.point
+      }
+    });
+  };
   
   ///////////////////////
   ///////// API /////////
