@@ -7,13 +7,13 @@ As stated in the first sentence of the README file  of the d3-voronoi repository
 
 > Voronoi layouts are particularly useful for invisible interactive regions, as demonstrated in Nate Vack’s [Voronoi picking](http://bl.ocks.org/njvack/1405439) example
 
-But this cited example also shows that interractive areas should be close to each point/subjectOfMatter. In other words, if the interactive area is far away from the subject of matter, interaction becomes confusing.
+But this cited example also shows that interractive regions should be close to each point/subjectOfMatter. In other words, if the interactive region is far away from the subject of matter, interaction becomes confusing.
 
-In its example, Nate Vack uses SVG's clipPath technique to limit Voronoï-based interactive area. This plugin mimic the final result by computing the adequate area for each subject of matter. The adequate area is a path which is the intersection area between the Voronoï cell and a max-distance circle.
+In its example, Nate Vack uses SVG's clipPath technique to limit Voronoï-based interactive region. This plugin mimic the final result by computing the adequate region for each subject of matter. The adequate region is the intersection area between the Voronoï cell and a max-distance circle.
 
 #### Examples
 
-* This <a href='http://bl.ocks.org/Kcnarf/4de291d8b2d1e6501990540d87bc1baf'>block</a> uses this __d3.geom.limitedDistanceVoronoi__ plugin.
+* This [block](href='http://bl.ocks.org/Kcnarf/4de291d8b2d1e6501990540d87bc1baf') uses this __d3.geom.limitedDistanceVoronoi__ plugin.
 
 #### Usages
 In your HTML file, load the plugin after loading D3. The result may look like:
@@ -29,13 +29,13 @@ var limitedVoronoi = d3.geom.distanceLimitedVoronoi()
   .y(...)                                     // set the y accessor (as in d3.vgeom.voronoi)
   .limit(20)                                  // set the maximum distance
 var limitedCells = limitedVoronoi(data)       // compute the layout; return an array of {path: , point: }
-                                                // where 'path' is the adequate interactive zone around the datum
-                                                // and 'point' is the datum (as in d3.vgeom.voronoi)
+                                                // where 'path' is the adequate region around the datum
+                                                // and 'point' is the datum (as in d3.geom.voronoi)
 ```
 
-Finally, in your javascript, in order to draw the interactive zones:
+Finally, in your javascript, in order to draw the (interactive) regions:
 ```javascript
-d3.selectAll("interactive-zone")
+d3.selectAll("interactive-region")
   .data(limitedCells)
   .enter()
     .append("path")
