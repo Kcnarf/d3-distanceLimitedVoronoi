@@ -12,6 +12,9 @@ d3.geom.distanceLimitedVoronoi = function () {
   _distanceLimitedVoronoi.data = function(data) {
     var voronoiLayout = voronoi(data);
     var result = voronoiLayout.map(function(cell) {
+      if (cell.point.Country==="Equatorial Guinea") {
+        debugger;
+      }
       return {
         path: distanceLimitedCell (cell, limit),
         point: cell.point
@@ -28,6 +31,7 @@ d3.geom.distanceLimitedVoronoi = function () {
   };
   
   _distanceLimitedVoronoi.x = function(_) {
+    debugger
     if (!arguments.length) return voronoi.x();
     voronoi.x(_);
     
@@ -61,12 +65,12 @@ d3.geom.distanceLimitedVoronoi = function () {
   ///////////////////////
   
   function distanceLimitedCell (cell, r) {
-    var seed = [voronoi.x(cell.point), voronoi.y(cell.point)];
+    var seed = [voronoi.x()(cell.point), voronoi.y()(cell.point)];
     if (allVertecesInsideMaxDistanceCircle(cell, seed, r)) {
       return "M"+cell.join("L")+"Z";
     } else {
       var path = "";
-      var p0TooFar = firstPointTooFar = pointTooFarFromSeed(cell[0], seed, maxCellDistance);
+      var p0TooFar = firstPointTooFar = pointTooFarFromSeed(cell[0], seed, r);
       var p0, p1, intersections;
       var openingArcPoint, lastClosingArcPoint;
       
@@ -75,7 +79,7 @@ d3.geom.distanceLimitedVoronoi = function () {
         p0 = cell[iseg];
         p1 = cell[(iseg+1)%cell.length];
         // compute intersections between segment and maxDistance circle
-        intersections = segmentCircleIntersections (p0, p1, seed ,maxCellDistance);
+        intersections = segmentCircleIntersections (p0, p1, seed ,r);
         // complete the path (with lines or arc) depending on:
         	// intersection count (0, 1, or 2)
         	// if the segment is the first to start the path
