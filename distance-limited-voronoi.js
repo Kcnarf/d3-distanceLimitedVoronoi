@@ -10,17 +10,12 @@ d3.geom.distanceLimitedVoronoi = function () {
   ///////////////////////
 
   _distanceLimitedVoronoi.data = function(data) {
-    var voronoiLayout = voronoi(data);
-    var result = voronoiLayout.map(function(cell) {
-      if (cell.point.Country==="Equatorial Guinea") {
-        debugger;
-      }
+    return voronoi(data).map(function(cell) {
       return {
         path: distanceLimitedCell (cell, limit),
         point: cell.point
       }
     });
-    return result;
   };
   
   _distanceLimitedVoronoi.limit = function(_) {
@@ -31,7 +26,6 @@ d3.geom.distanceLimitedVoronoi = function () {
   };
   
   _distanceLimitedVoronoi.x = function(_) {
-    debugger
     if (!arguments.length) return voronoi.x();
     voronoi.x(_);
     
