@@ -1,12 +1,7 @@
 d3.geom.distanceLimitedVoronoi = function () {
-  /////// Inputs ///////
-  var limit = 20;             // default limit
-  
-  /////// Result ///////
-  var tesselation;            // array of {path: , point: }
-  
   /////// Internals ///////
   var voronoi = d3.geom.voronoi;
+  var limit = 20;             // default limit
   
   function _distanceLimitedVoronoi () {};   // constructor ???
   
@@ -14,6 +9,19 @@ d3.geom.distanceLimitedVoronoi = function () {
   ///////// API /////////
   ///////////////////////
 
+  _distanceLimitedVoronoi.data = function(data) {
+    var voronoiLayout = voronoi(data);
+    debugger
+    var result = voronoiLayout.map(function(cell) {
+      return {
+        path: distanceLimitedCell (cell, limit),
+        point: cell.point
+      }
+    });
+    
+    return result;
+  };
+  
   _distanceLimitedVoronoi.limit = function(_) {
     if (!arguments.length) return limit;
     limit = _;
@@ -21,15 +29,42 @@ d3.geom.distanceLimitedVoronoi = function () {
     return _distanceLimitedVoronoi;
   };
   
-  //TODOS: expose d3.geom.voronoi API
+  _distanceLimitedVoronoi.x = function(_) {
+    if (!arguments.length) return voronoi.x;
+    voronoi.x = _;
+    
+    return _distanceLimitedVoronoi;
+  };
+  
+  _distanceLimitedVoronoi.y = function(_) {
+    if (!arguments.length) return voronoi.y;
+    voronoi.y = _;
+    
+    return _distanceLimitedVoronoi;
+  };
+  
+  _distanceLimitedVoronoi.clipExtent = function(_) {
+    if (!arguments.length) return voronoi.clipExtent;
+    voronoi.clipExtent = _;
+    
+    return _distanceLimitedVoronoi;
+  };
+  
+  _distanceLimitedVoronoi.links = function(data) {
+    return voronoi.links(data);
+  };
+  
+  _distanceLimitedVoronoi.triangles = function(data) {
+    return voronoi.triangles(data);
+  };
   
   ///////////////////////
   /////// Private ///////
   ///////////////////////
   
   function distanceLimitedCell (cell, r) {
-    var seed = [xAccessor(cell.point), yAccessor(cell.point)];
-    if (allVertecesInsideMaxDistanceCircle(cell, seed, maxCellDistance)) {
+    var seed = [voronoi.x(cell.point), voronoi.y(cell.point)];
+    if (allVertecesInsideMaxDistanceCircle(cell, seed, r)) {
       return "M"+cell.join("L")+"Z";
     } else {
       var path = "";
