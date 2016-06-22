@@ -27,7 +27,9 @@ d3.geom.distanceLimitedVoronoi = function () {
   
   _distanceLimitedVoronoi.limit = function(_) {
     if (!arguments.length) return limit;
-    limit = _;
+    if (typeof _ === "number") {
+      limit = Math.abs(_);
+    };
     
     return _distanceLimitedVoronoi;
   };
