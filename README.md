@@ -60,7 +60,7 @@ limit = 20;
 ```
 
 
-<a name="distanceLimitedVoronoi_" href="#distanceLimitedVoronoi_">#</a> <i>distanceLimitedVoronoi.</i>(data)
+<a name="distanceLimitedVoronoi_" href="#distanceLimitedVoronoi_">#</a> <i>distanceLimitedVoronoi</i>(data)
 
 Computes the distanceLimitedVoronoi tesselation for the specified _data_ points.
 
