@@ -19,8 +19,8 @@ In its example, Nate Vack uses SVG's clipPath technique to cut off Voronoï-base
 ## Installing
 In your HTML file, load the plugin after loading D3. The result may look like:
 ```html
-<script src="https://d3js.org/d3.v3.min.js"></script>
-<script src="https://rawgit.com/Kcnarf/d3.distanceLimitedVoronoi/master/distance-limited-voronoi.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://rawgit.com/Kcnarf/d3.distanceLimitedVoronoi/d3v4/distance-limited-voronoi.js"></script>
 ```
 
 ## TL;DR;
