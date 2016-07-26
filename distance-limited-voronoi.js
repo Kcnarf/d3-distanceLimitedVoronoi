@@ -1,6 +1,6 @@
 d3.distanceLimitedVoronoi = function () {
   /////// Internals ///////
-  var voronoi = d3.voronoi();
+  var voronoi = d3.geom.voronoi();
   var limit = 20;             // default limit
 
   function _distanceLimitedVoronoi (data) {
