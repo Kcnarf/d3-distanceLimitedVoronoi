@@ -1,17 +1,17 @@
-d3.geom.distanceLimitedVoronoi = function () {
+d3.distanceLimitedVoronoi = function () {
   /////// Internals ///////
-  var voronoi = d3.geom.voronoi();
+  var voronoi = d3.voronoi();
   var limit = 20;             // default limit
-  
+
   function _distanceLimitedVoronoi (data) {
     return voronoi(data).map(function(cell) {
       return {
         path: distanceLimitedCell (cell, limit),
         point: cell.point
-      }
+      };
     });
-  };
-  
+  }
+
   ///////////////////////
   ///////// API /////////
   ///////////////////////
@@ -21,62 +21,63 @@ d3.geom.distanceLimitedVoronoi = function () {
       return {
         path: distanceLimitedCell (cell, limit),
         point: cell.point
-      }
+      };
     });
   };
-  
+
   _distanceLimitedVoronoi.limit = function(_) {
-    if (!arguments.length) return limit;
+    if (!arguments.length) { return limit; }
     if (typeof _ === "number") {
       limit = Math.abs(_);
-    };
-    
+    }
+
     return _distanceLimitedVoronoi;
   };
-  
+
   _distanceLimitedVoronoi.x = function(_) {
-    if (!arguments.length) return voronoi.x();
+    if (!arguments.length) { return voronoi.x(); }
     voronoi.x(_);
-    
+
     return _distanceLimitedVoronoi;
   };
-  
+
   _distanceLimitedVoronoi.y = function(_) {
-    if (!arguments.length) return voronoi.y();
+    if (!arguments.length) { return voronoi.y(); }
     voronoi.y(_);
-    
+
     return _distanceLimitedVoronoi;
   };
-  
+
   _distanceLimitedVoronoi.clipExtent = function(_) {
-    if (!arguments.length) return voronoi.clipExtent();
+    if (!arguments.length) { return voronoi.clipExtent(); }
     voronoi.clipExtent(_);
-    
+
     return _distanceLimitedVoronoi;
   };
-  
+
   _distanceLimitedVoronoi.links = function(data) {
     return voronoi.links(data);
   };
-  
+
   _distanceLimitedVoronoi.triangles = function(data) {
     return voronoi.triangles(data);
   };
-  
+
   ///////////////////////
   /////// Private ///////
   ///////////////////////
-  
+
   function distanceLimitedCell (cell, r) {
     var seed = [voronoi.x()(cell.point), voronoi.y()(cell.point)];
     if (allVertecesInsideMaxDistanceCircle(cell, seed, r)) {
       return "M"+cell.join("L")+"Z";
     } else {
       var path = "";
-      var p0TooFar = firstPointTooFar = pointTooFarFromSeed(cell[0], seed, r);
+      var firstPointTooFar = pointTooFarFromSeed(cell[0], seed, r);
+      var p0TooFar = firstPointTooFar;
       var p0, p1, intersections;
       var openingArcPoint, lastClosingArcPoint;
-      
+
       //begin: loop through all segments to compute path
       for (var iseg=0; iseg<cell.length; iseg++) {
         p0 = cell[iseg];
@@ -135,6 +136,7 @@ d3.geom.distanceLimitedVoronoi = function () {
         } else {
           if (p0TooFar) {
             // entire segment too far, nothing to do
+            true;
           } else {
             // entire segment in maxDistance
             if (path==="") {
@@ -146,7 +148,7 @@ d3.geom.distanceLimitedVoronoi = function () {
           }
         }
       }//end: loop through all segments
-      
+
       if (path === '') {
         // special case: no segment intersects the maxDistance circle
         // cell perimeter is entirely outside the maxDistance circle
@@ -162,20 +164,20 @@ d3.geom.distanceLimitedVoronoi = function () {
 
       return path;
     }
-    
+
     function allVertecesInsideMaxDistanceCircle (cell, seed, r) {
       var result = true;
       var p;
       for (var ip=0; ip<cell.length; ip++) {
-        result &= !pointTooFarFromSeed(cell[ip], seed, r);
+        result = result && !pointTooFarFromSeed(cell[ip], seed, r);
       }
       return result;
     }
-    
+
     function pointTooFarFromSeed(p, seed, r) {
       return (Math.pow(p[0]-seed[0],2)+Math.pow(p[1]-seed[1],2)>Math.pow(r, 2));
     }
-    
+
     function largeArc(p0, p1, seed) {
       var v1 = [p0[0] - seed[0], p0[1] - seed[1]],
           v2 = [p1[0] - seed[0], p1[1] - seed[1]];
@@ -183,7 +185,7 @@ d3.geom.distanceLimitedVoronoi = function () {
       var angle = Math.atan2( v1[0]*v2[1] - v1[1]*v2[0], v1[0]*v2[0] + v1[1]*v2[1] );
       return (angle<0)? 0 : 1;
     }
-  };
+  }
 
   function segmentCircleIntersections (A, B, C, r) {
     /*
@@ -192,9 +194,9 @@ d3.geom.distanceLimitedVoronoi = function () {
 		var Ax = A[0], Ay = A[1],
         Bx = B[0], By = B[1],
         Cx = C[0], Cy = C[1];
-    
+
     // compute the euclidean distance between A and B
-    LAB = Math.sqrt(Math.pow(Bx-Ax, 2)+Math.pow(By-Ay, 2));
+    var LAB = Math.sqrt(Math.pow(Bx-Ax, 2)+Math.pow(By-Ay, 2));
 
     // compute the direction vector D from A to B
     var Dx = (Bx-Ax)/LAB;
@@ -203,7 +205,7 @@ d3.geom.distanceLimitedVoronoi = function () {
     // Now the line equation is x = Dx*t + Ax, y = Dy*t + Ay with 0 <= t <= 1.
 
     // compute the value t of the closest point to the circle center (Cx, Cy)
-    var t = Dx*(Cx-Ax) + Dy*(Cy-Ay);    
+    var t = Dx*(Cx-Ax) + Dy*(Cy-Ay);
 
     // This is the projection of C on the line from A to B.
 
@@ -221,19 +223,19 @@ d3.geom.distanceLimitedVoronoi = function () {
       var dt = Math.sqrt(Math.pow(r, 2)-Math.pow(LEC, 2));
 			var tF = (t-dt); // t of first intersection point
       var tG = (t+dt); // t of second intersection point
-      
+
       var result = [];
       if ((tF>0)&&(tF<LAB)) { // test if first intersection point in segment
         // compute first intersection point
         var Fx = (t-dt)*Dx + Ax;
         var Fy = (t-dt)*Dy + Ay;
-        result.push([Fx, Fy])
+        result.push([Fx, Fy]);
       }
       if ((tG>0)&&(tG<LAB)) { // test if second intersection point in segment
         // compute second intersection point
         var Gx = (t+dt)*Dx + Ax;
         var Gy = (t+dt)*Dy + Ay;
-        result.push([Gx, Gy])
+        result.push([Gx, Gy]);
       }
       return  result;
     } else {
@@ -243,6 +245,6 @@ d3.geom.distanceLimitedVoronoi = function () {
       return [];
     }
   }
-  
+
   return _distanceLimitedVoronoi;
-}
+};
