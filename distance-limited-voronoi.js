@@ -4,7 +4,7 @@ d3.distanceLimitedVoronoi = function () {
   var limit = 20;             // default limit
 
   function _distanceLimitedVoronoi (data) {
-    return voronoi(data).map(function(cell) {
+    return voronoi.polygons(data).map(function(cell) {
       return {
         path: distanceLimitedCell (cell, limit),
         datum: cell.data
