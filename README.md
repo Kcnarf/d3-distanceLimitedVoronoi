@@ -23,7 +23,7 @@ In your HTML file, load the plugin after loading D3. The result may look like:
 <script src="https://rawgit.com/Kcnarf/d3.distanceLimitedVoronoi/master/distance-limited-voronoi.js"></script>
 ```
 
-## Usages
+## TL;DR;
 In your javascript, in order to define the layout:
 ```javascript
 var limitedVoronoi = d3.distanceLimitedVoronoi()
