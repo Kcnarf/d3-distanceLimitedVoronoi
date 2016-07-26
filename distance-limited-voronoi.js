@@ -55,12 +55,13 @@ d3.distanceLimitedVoronoi = function () {
     return _distanceLimitedVoronoi;
   };
 
-  _distanceLimitedVoronoi.links = function(data) {
-    return voronoi.links(data);
-  };
+  //exposes the underlying d3.geom.voronoi
+  //eg. allows to code 'limitedVoronoi.voronoi().triangle(data)'
+  _distanceLimitedVoronoi.voronoi = function(_) {
+    if (!arguments.length) { return voronoi; }
+    voronoi = _;
 
-  _distanceLimitedVoronoi.triangles = function(data) {
-    return voronoi.triangles(data);
+    return _distanceLimitedVoronoi;
   };
 
   ///////////////////////
