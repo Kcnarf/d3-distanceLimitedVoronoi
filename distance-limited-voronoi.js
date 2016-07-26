@@ -39,9 +39,9 @@ d3.distanceLimitedVoronoi = function () {
     return _distanceLimitedVoronoi;
   };
 
-  _distanceLimitedVoronoi.clipExtent = function(_) {
-    if (!arguments.length) { return voronoi.clipExtent(); }
-    voronoi.clipExtent(_);
+  _distanceLimitedVoronoi.extent = function(_) {
+    if (!arguments.length) { return voronoi.extent(); }
+    voronoi.extent(_);
 
     return _distanceLimitedVoronoi;
   };
