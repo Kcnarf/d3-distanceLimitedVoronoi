@@ -16,15 +16,6 @@ d3.distanceLimitedVoronoi = function () {
   ///////// API /////////
   ///////////////////////
 
-  _distanceLimitedVoronoi.data = function(data) {
-    return voronoi(data).map(function(cell) {
-      return {
-        path: distanceLimitedCell (cell, limit),
-        point: cell.point
-      };
-    });
-  };
-
   _distanceLimitedVoronoi.limit = function(_) {
     if (!arguments.length) { return limit; }
     if (typeof _ === "number") {

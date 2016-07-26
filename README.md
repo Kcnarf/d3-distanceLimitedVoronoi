@@ -72,7 +72,7 @@ If _radius_ is specified, set the _limit_ (ie. maximum distance) of each cell an
 
 <a name="distanceLimitedVoronoi_voronoi" href="#distanceLimitedVoronoi_voronoi">#</a> <i>distanceLimitedVoronoi.</i><b>voronoi</b>([voronoi])
 
-If _voronoi_ is specified, set the voronoi layout used by the distanceLimitedVoronoi and returns it. If _voronoi_ is not specified, return the currently used voronoi, which defaults to ```d3.geom.voronoi```.
+If _voronoi_ is specified, set the voronoi layout used by the distanceLimitedVoronoi and returns it. If _voronoi_ is not specified, return the currently used voronoi, which defaults to ```d3.geom.voronoi()```.
 
 
 <a name="distanceLimitedVoronoi_x" href="#distanceLimitedVoronoi_x">#</a> <i>distanceLimitedVoronoi.</i><b>x</b>([callback])
