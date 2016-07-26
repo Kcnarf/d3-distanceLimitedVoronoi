@@ -27,12 +27,12 @@ In your HTML file, load the plugin after loading D3. The result may look like:
 In your javascript, in order to define the layout:
 ```javascript
 var limitedVoronoi = d3.distanceLimitedVoronoi()
-  .x(...)                                     // set the x accessor (as in d3.geom.voronoi)
-  .y(...)                                     // set the y accessor (as in d3.geom.voronoi)
+  .x(...)                                     // set the x accessor (as in d3.voronoi)
+  .y(...)                                     // set the y accessor (as in d3.voronoi)
   .limit(20)                                  // set the maximum distance
-var limitedCells = limitedVoronoi(data)       // compute the layout; return an array of {path: , point: }
+var limitedCells = limitedVoronoi(data)       // compute the layout; return an array of {path: , datum: }
                                                 // where 'path' is the adequate region around the datum
-                                                // and 'point' is the datum (as in d3.geom.voronoi)
+                                                // and 'datum' is the datum
 ```
 
 Finally, in your javascript, in order to draw the (interactive) regions:
@@ -55,7 +55,7 @@ d3.selectAll("interactive-region")
 
 Creates a new distanceLimitedVoronoi diagram with the default settings:
 ```javascript
-voronoi = d3.geom.voronoi()
+voronoi = d3.voronoi()
 limit = 20;
 ```
 
@@ -72,7 +72,7 @@ If _radius_ is specified, set the _limit_ (ie. maximum distance) of each cell an
 
 <a name="distanceLimitedVoronoi_voronoi" href="#distanceLimitedVoronoi_voronoi">#</a> <i>distanceLimitedVoronoi.</i><b>voronoi</b>([voronoi])
 
-If _voronoi_ is specified, set the voronoi layout used by the distanceLimitedVoronoi and returns it. If _voronoi_ is not specified, return the currently used voronoi, which defaults to ```d3.geom.voronoi()```.
+If _voronoi_ is specified, set the voronoi layout used by the distanceLimitedVoronoi and returns it. If _voronoi_ is not specified, return the currently used voronoi, which defaults to ```d3.voronoi()```.
 
 
 <a name="distanceLimitedVoronoi_x" href="#distanceLimitedVoronoi_x">#</a> <i>distanceLimitedVoronoi.</i><b>x</b>([callback])
