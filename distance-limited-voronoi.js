@@ -1,13 +1,13 @@
 d3.distanceLimitedVoronoi = function () {
   /////// Internals ///////
-  var voronoi = d3.geom.voronoi();
+  var voronoi = d3.voronoi();
   var limit = 20;             // default limit
 
   function _distanceLimitedVoronoi (data) {
-    return voronoi(data).map(function(cell) {
+    return voronoi.polygons(data).map(function(cell) {
       return {
         path: distanceLimitedCell (cell, limit),
-        point: cell.point
+        datum: cell.data
       };
     });
   }
@@ -39,9 +39,9 @@ d3.distanceLimitedVoronoi = function () {
     return _distanceLimitedVoronoi;
   };
 
-  _distanceLimitedVoronoi.clipExtent = function(_) {
-    if (!arguments.length) { return voronoi.clipExtent(); }
-    voronoi.clipExtent(_);
+  _distanceLimitedVoronoi.extent = function(_) {
+    if (!arguments.length) { return voronoi.extent(); }
+    voronoi.extent(_);
 
     return _distanceLimitedVoronoi;
   };
@@ -60,7 +60,7 @@ d3.distanceLimitedVoronoi = function () {
   ///////////////////////
 
   function distanceLimitedCell (cell, r) {
-    var seed = [voronoi.x()(cell.point), voronoi.y()(cell.point)];
+    var seed = [voronoi.x()(cell.data), voronoi.y()(cell.data)];
     if (allVertecesInsideMaxDistanceCircle(cell, seed, r)) {
       return "M"+cell.join("L")+"Z";
     } else {
