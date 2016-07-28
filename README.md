@@ -1,6 +1,7 @@
 # d3-distanceLimitedVoronoi
 D3 plugin which computes a Voronoi tesselation where each cell defines a region inside a given distance.
 
+This page (as the all _master branch_) concerns the plugin available for __d3v4__. Switch to the [_d3v3 branch_](github.com/Kcnarf/d3-distanceLimitedVoronoi/tree/d3v3) for the plugin available for __d3v3__.
 ## Context
 
 As stated in the first sentence of the README file of the [d3-voronoi repository](https://github.com/d3/d3/wiki/Voronoi-Geom):
