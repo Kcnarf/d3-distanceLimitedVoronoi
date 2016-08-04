@@ -86,6 +86,6 @@ If _callback_ is specified, set the _x_-coordinate accessor and returns this dis
 If _callback_ is specified, set the _y_-coordinate accessor and returns this distanceLimitedVoronoi. If _callback_ is not specified, return the current _y_-coordinate accessor, which defaults to ```function(d) { return d.[1]; }```.
 
 
-<a name="distanceLimitedVoronoi_extent" href="#distanceLimitedVoronoi_extent">#</a> <i>distanceLimitedVoronoi.</i><b>clipExtent</b>([extent])
+<a name="distanceLimitedVoronoi_extent" href="#distanceLimitedVoronoi_extent">#</a> <i>distanceLimitedVoronoi.</i><b>extent</b>([extent])
 
 If _extent_ is specified, set the clip extent of the layout to the specified bounds and returns this distanceLimitedVoronoi. The extent bounds are specified as an array [​[x0, y0], [x1, y1]​], where x0 is the left side of the extent, y0 is the top, x1 is the right and y1 is the bottom. If _extent_ is not specified, return the current clip extent, which defaults to ```[[-1e6, -1e6], [1e6,1e6]]```.
