@@ -14,8 +14,8 @@ In its example, Nate Vack uses SVG's clipPath technique to cut off Voronoï-base
 
 ## Examples
 
-* This [block](http://bl.ocks.org/Kcnarf/6d5ace3aa9cc1a313d72b810388d1003) is an update of Nate Vack’s _Voronoi picking_ example, using the __d3-distanceLimitedVoronoi__ plugin
-* This [block](http://bl.ocks.org/Kcnarf/4de291d8b2d1e6501990540d87bc1baf) uses the __d3-distanceLimitedVoronoi__ plugin in a real case study
+ * This [block](http://bl.ocks.org/Kcnarf/6d5ace3aa9cc1a313d72b810388d1003) is an update of Nate Vack’s _Voronoi picking_ example, using the __d3-distanceLimitedVoronoi__ plugin
+ * This [block](http://bl.ocks.org/Kcnarf/4de291d8b2d1e6501990540d87bc1baf) uses the __d3-distanceLimitedVoronoi__ plugin in a real case study
 
 ## Installing
 In your HTML file, load the plugin after loading D3. The result may look like:
@@ -48,7 +48,8 @@ d3.selectAll("interactive-region")
 ```
 
 ## Reference
-* d3-voronoi: https://github.com/d3/d3/wiki/Voronoi-Geom
+
+* d3-voronoi: [https://github.com/d3/d3-voronoi/](https://github.com/d3/d3-voronoi/)
 
 ## API Reference
 
