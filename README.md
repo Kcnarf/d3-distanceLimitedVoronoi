@@ -2,9 +2,10 @@
 D3 plugin which computes a Voronoi tesselation where each cell defines a region inside a given distance.
 
 This page (as the all _master branch_) concerns the plugin's version compatible with __d3v4__. Switch to the [_d3v3 branch_](https://github.com/Kcnarf/d3-distanceLimitedVoronoi/tree/d3v3) for the version compatible with __d3v3__.
+
 ## Context
 
-As stated in the first sentence of the README file of the [d3-voronoi repository](https://github.com/d3/d3/wiki/Voronoi-Geom):
+As stated in the first sentence of the README file of the [d3-voronoi repository](https://github.com/d3/d3-voronoi):
 
 > Voronoi layouts are particularly useful for invisible interactive regions, as demonstrated in Nate Vack’s [Voronoi picking](http://bl.ocks.org/njvack/1405439) example
 
