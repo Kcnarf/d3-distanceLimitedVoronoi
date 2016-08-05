@@ -6,7 +6,7 @@ d3.distanceLimitedVoronoi = function () {
   function _distanceLimitedVoronoi (data) {
     return voronoi.polygons(data).map(function(cell) {
       return {
-        path: distanceLimitedCell (cell, limit),
+        path: distanceLimitedCell(cell, limit, d3.path()).toString(),
         datum: cell.data
       };
     });
@@ -60,8 +60,8 @@ d3.distanceLimitedVoronoi = function () {
   ///////////////////////
 
   function distanceLimitedCell (cell, r, context) {
-      var seed = [xAccessor(cell.data), yAccessor(cell.data)];
-      if (allVertecesInsideMaxDistanceCircle(cell, seed, maxCellDistance)) {
+      var seed = [voronoi.x()(cell.data), voronoi.y()(cell.data)];
+      if (allVertecesInsideMaxDistanceCircle(cell, seed, r)) {
         context.moveTo(cell[0][0], cell[0][1]);
         for (var j = 1, m = cell.length; j < m; ++j) {
           context.lineTo(cell[j][0], cell[j][1]);
@@ -70,17 +70,18 @@ d3.distanceLimitedVoronoi = function () {
         return context;
       } else {
         var pathNotYetStarted = true;
-        var p0TooFar = firstPointTooFar = pointTooFarFromSeed(cell[0], seed, maxCellDistance);
+        var firstPointTooFar = pointTooFarFromSeed(cell[0], seed, r);
+        var p0TooFar = firstPointTooFar;
         var p0, p1, intersections;
         var openingArcPoint, lastClosingArcPoint;
-        var stratAngle, endAngle;
+        var startAngle, endAngle;
 
         //begin: loop through all segments to compute path
         for (var iseg=0; iseg<cell.length; iseg++) {
           p0 = cell[iseg];
           p1 = cell[(iseg+1)%cell.length];
           // compute intersections between segment and maxDistance circle
-          intersections = segmentCircleIntersections (p0, p1, seed ,maxCellDistance);
+          intersections = segmentCircleIntersections (p0, p1, seed, r);
           // complete the path (with lines or arc) depending on:
           	// intersection count (0, 1, or 2)
           	// if the segment is the first to start the path
@@ -97,7 +98,7 @@ d3.distanceLimitedVoronoi = function () {
               } else {
               	//draw arc until first intersection
                 startAngle = angle(seed, openingArcPoint);
-                endAngle = angle(seed, intersections[0])
+                endAngle = angle(seed, intersections[0]);
                 context.arc(seed[0], seed[1], r, startAngle, endAngle, 1);
               }
               // then line to 2nd intersection, then initiliaze an arc
@@ -115,11 +116,11 @@ d3.distanceLimitedVoronoi = function () {
                 // store first intersection to close last arc
                 lastClosingArcPoint = intersections[0];
                 // init path at first intersection
-                context.moveTo(intersections[0][0], intersections[0][1])
+                context.moveTo(intersections[0][0], intersections[0][1]);
               } else {
                 // draw an arc until intersection
               	startAngle = angle(seed, openingArcPoint);
-                endAngle = angle(seed, intersections[0])
+                endAngle = angle(seed, intersections[0]);
                 context.arc(seed[0], seed[1], r, startAngle, endAngle, 1);
               }
               // then line to next point (1st out, 2nd in)
@@ -138,6 +139,7 @@ d3.distanceLimitedVoronoi = function () {
           } else {
             if (p0TooFar) {
               // entire segment too far, nothing to do
+              true;
             } else {
               // entire segment in maxDistance
               if (pathNotYetStarted) {
@@ -146,7 +148,7 @@ d3.distanceLimitedVoronoi = function () {
                 context.moveTo(p0[0], p0[1]);
               }
               // line to next point
-              context.lineTo(p1[0], p1[1])
+              context.lineTo(p1[0], p1[1]);
             }
           }
         }//end: loop through all segments
@@ -162,7 +164,7 @@ d3.distanceLimitedVoronoi = function () {
           // if final segment ends with an opened arc, close it
           if (firstPointTooFar) {
             startAngle = angle(seed, openingArcPoint);
-            endAngle = angle(seed, lastClosingArcPoint)
+            endAngle = angle(seed, lastClosingArcPoint);
             context.arc(seed[0], seed[1], r, startAngle, endAngle, 1);
           }
           context.closePath();
@@ -184,12 +186,10 @@ d3.distanceLimitedVoronoi = function () {
       return (Math.pow(p[0]-seed[0],2)+Math.pow(p[1]-seed[1],2)>Math.pow(r, 2));
     }
 
-    function largeArc(p0, p1, seed) {
-      var v1 = [p0[0] - seed[0], p0[1] - seed[1]],
-          v2 = [p1[0] - seed[0], p1[1] - seed[1]];
-      // from http://stackoverflow.com/questions/2150050/finding-signed-angle-between-vectors
-      var angle = Math.atan2( v1[0]*v2[1] - v1[1]*v2[0], v1[0]*v2[0] + v1[1]*v2[1] );
-      return (angle<0)? 0 : 1;
+    function angle(seed, p) {
+      var v = [p[0] - seed[0], p[1] - seed[1]];
+      // from http://stackoverflow.com/questions/2150050/finding-signed-angle-between-vectors, with v1 = horizontal radius = [seed[0]+r - seed[0], seed[0] - seed[0]]
+     return Math.atan2( v[1], v[0]);
     }
   }
 
