@@ -59,103 +59,117 @@ d3.distanceLimitedVoronoi = function () {
   /////// Private ///////
   ///////////////////////
 
-  function distanceLimitedCell (cell, r) {
-    var seed = [voronoi.x()(cell.data), voronoi.y()(cell.data)];
-    if (allVertecesInsideMaxDistanceCircle(cell, seed, r)) {
-      return "M"+cell.join("L")+"Z";
-    } else {
-      var path = "";
-      var firstPointTooFar = pointTooFarFromSeed(cell[0], seed, r);
-      var p0TooFar = firstPointTooFar;
-      var p0, p1, intersections;
-      var openingArcPoint, lastClosingArcPoint;
-
-      //begin: loop through all segments to compute path
-      for (var iseg=0; iseg<cell.length; iseg++) {
-        p0 = cell[iseg];
-        p1 = cell[(iseg+1)%cell.length];
-        // compute intersections between segment and maxDistance circle
-        intersections = segmentCircleIntersections (p0, p1, seed ,r);
-        // complete the path (with lines or arc) depending on:
-        	// intersection count (0, 1, or 2)
-        	// if the segment is the first to start the path
-        	// if the first point of the segment is inside or outside of the maxDistance circle
-        if (intersections.length===2) {
-          if (p0TooFar) {
-            if (path==="") {
-              // entire path will finish with an arc
-              // store first intersection to close last arc
-              lastClosingArcPoint = intersections[0];
-              // init path at 1st intersection
-              path += "M"+intersections[0];
-            } else {
-            	//close arc at first intersection
-              path += largeArc(openingArcPoint, intersections[0], seed)+" 0 "+intersections[0];
-            }
-            // then line to 2nd intersection, then initiliaze an arc
-            path += "L"+intersections[1];
-            path += "A "+r+" "+r+" 0 ";
-            openingArcPoint = intersections[1];
-          } else {
-            // THIS CASE IS IMPOSSIBLE AND SHOULD NOT ARISE
-            console.error("What's the f**k");
-          }
-        } else if (intersections.length===1) {
-          if (p0TooFar) {
-            if (path==="") {
-              // entire path will finish with an arc
-              // store first intersection to close last arc
-              lastClosingArcPoint = intersections[0];
-              // init path at first intersection
-              path += "M"+intersections[0];
-            } else {
-              // close the arc at intersection
-            	path += largeArc(openingArcPoint, intersections[0], seed)+" 0 "+intersections[0];
-            }
-            // then line to next point (1st out, 2nd in)
-            path += "L"+p1;
-          } else {
-            if (path==="") {
-              // init path at p0
-              path += "M"+p0;
-            }
-            // line to intersection, then initiliaze arc (1st in, 2nd out)
-            path += "L"+intersections[0];
-            path += "A "+r+" "+r+" 0 ";
-            openingArcPoint = intersections[0];
-          }
-          p0TooFar = !p0TooFar;
-        } else {
-          if (p0TooFar) {
-            // entire segment too far, nothing to do
-            true;
-          } else {
-            // entire segment in maxDistance
-            if (path==="") {
-              // init path at p0
-              path += "M"+p0;
-            }
-            // line to next point
-            path += "L"+p1;
-          }
+  function distanceLimitedCell (cell, r, context) {
+      var seed = [xAccessor(cell.data), yAccessor(cell.data)];
+      if (allVertecesInsideMaxDistanceCircle(cell, seed, maxCellDistance)) {
+        context.moveTo(cell[0][0], cell[0][1]);
+        for (var j = 1, m = cell.length; j < m; ++j) {
+          context.lineTo(cell[j][0], cell[j][1]);
         }
-      }//end: loop through all segments
-
-      if (path === '') {
-        // special case: no segment intersects the maxDistance circle
-        // cell perimeter is entirely outside the maxDistance circle
-        // path is the maxDistance circle, drawing 2 1/2-circles as mbostock does for its d3.svg.symbol.type("circle")
-        path = "M"+[seed[0]+r,seed[1]]+"A "+r+" "+r+" 0 0 0 "+[seed[0]-r,seed[1]]+"A "+r+" "+r+" 0 0 0 "+[seed[0]+r,seed[1]]+"Z";
+        context.closePath();
+        return context;
       } else {
-        // if final segment ends with an opened arc, close it
-        if (firstPointTooFar) {
-          path += largeArc(openingArcPoint, lastClosingArcPoint, seed)+" 0 "+lastClosingArcPoint;
-        }
-        path+="Z";
-      }
+        var pathNotYetStarted = true;
+        var p0TooFar = firstPointTooFar = pointTooFarFromSeed(cell[0], seed, maxCellDistance);
+        var p0, p1, intersections;
+        var openingArcPoint, lastClosingArcPoint;
+        var stratAngle, endAngle;
 
-      return path;
-    }
+        //begin: loop through all segments to compute path
+        for (var iseg=0; iseg<cell.length; iseg++) {
+          p0 = cell[iseg];
+          p1 = cell[(iseg+1)%cell.length];
+          // compute intersections between segment and maxDistance circle
+          intersections = segmentCircleIntersections (p0, p1, seed ,maxCellDistance);
+          // complete the path (with lines or arc) depending on:
+          	// intersection count (0, 1, or 2)
+          	// if the segment is the first to start the path
+          	// if the first point of the segment is inside or outside of the maxDistance circle
+          if (intersections.length===2) {
+            if (p0TooFar) {
+              if (pathNotYetStarted) {
+                pathNotYetStarted = false;
+                // entire path will finish with an arc
+                // store first intersection to close last arc
+                lastClosingArcPoint = intersections[0];
+                // init path at 1st intersection
+                context.moveTo(intersections[0][0], intersections[0][1]);
+              } else {
+              	//draw arc until first intersection
+                startAngle = angle(seed, openingArcPoint);
+                endAngle = angle(seed, intersections[0])
+                context.arc(seed[0], seed[1], r, startAngle, endAngle, 1);
+              }
+              // then line to 2nd intersection, then initiliaze an arc
+              context.lineTo(intersections[1][0], intersections[1][1]);
+              openingArcPoint = intersections[1];
+            } else {
+              // THIS CASE IS IMPOSSIBLE AND SHOULD NOT ARISE
+              console.error("What's the f**k");
+            }
+          } else if (intersections.length===1) {
+            if (p0TooFar) {
+              if (pathNotYetStarted) {
+                pathNotYetStarted = false;
+                // entire path will finish with an arc
+                // store first intersection to close last arc
+                lastClosingArcPoint = intersections[0];
+                // init path at first intersection
+                context.moveTo(intersections[0][0], intersections[0][1])
+              } else {
+                // draw an arc until intersection
+              	startAngle = angle(seed, openingArcPoint);
+                endAngle = angle(seed, intersections[0])
+                context.arc(seed[0], seed[1], r, startAngle, endAngle, 1);
+              }
+              // then line to next point (1st out, 2nd in)
+              context.lineTo(p1[0], p1[1]);
+            } else {
+              if (pathNotYetStarted) {
+                pathNotYetStarted = false;
+                // init path at p0
+                context.moveTo(p0[0], p0[1]);
+              }
+              // line to intersection, then initiliaze arc (1st in, 2nd out)
+              context.lineTo(intersections[0][0], intersections[0][1]);
+              openingArcPoint = intersections[0];
+            }
+            p0TooFar = !p0TooFar;
+          } else {
+            if (p0TooFar) {
+              // entire segment too far, nothing to do
+            } else {
+              // entire segment in maxDistance
+              if (pathNotYetStarted) {
+                pathNotYetStarted = false;
+                // init path at p0
+                context.moveTo(p0[0], p0[1]);
+              }
+              // line to next point
+              context.lineTo(p1[0], p1[1])
+            }
+          }
+        }//end: loop through all segments
+
+        if (pathNotYetStarted) {
+          // special case: no segment intersects the maxDistance circle
+          // cell perimeter is entirely outside the maxDistance circle
+          // path is the maxDistance circle
+          pathNotYetStarted = false;
+          context.moveTo(seed[0] + r, seed[1]);
+  				context.arc(seed[0], seed[1], r, 0, 2 * Math.PI, false);
+        } else {
+          // if final segment ends with an opened arc, close it
+          if (firstPointTooFar) {
+            startAngle = angle(seed, openingArcPoint);
+            endAngle = angle(seed, lastClosingArcPoint)
+            context.arc(seed[0], seed[1], r, startAngle, endAngle, 1);
+          }
+          context.closePath();
+        }
+
+        return context;
+      }
 
     function allVertecesInsideMaxDistanceCircle (cell, seed, r) {
       var result = true;
