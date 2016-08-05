@@ -2,14 +2,25 @@ d3.distanceLimitedVoronoi = function () {
   /////// Internals ///////
   var voronoi = d3.voronoi().extent([[-1e6,-1e6], [1e6,1e6]]);
   var limit = 20;             // default limit
+  var context = null;         // set it to render to a canvas' 2D context
 
   function _distanceLimitedVoronoi (data) {
-    return voronoi.polygons(data).map(function(cell) {
-      return {
-        path: distanceLimitedCell(cell, limit, d3.path()).toString(),
-        datum: cell.data
-      };
-    });
+    if (!context===null) {
+      //renders into a Canvas
+      context.beginPath();
+      voronoi.polygons(data).forEach(function(cell) {
+        distanceLimitedCell(cell, limit, context);
+      });
+      return true;
+    } else {
+      //final viz is an SVG
+      return voronoi.polygons(data).map(function(cell) {
+        return {
+          path: distanceLimitedCell(cell, limit, d3.path()).toString(),
+          datum: cell.data
+        };
+      });
+    }
   }
 
   ///////////////////////
@@ -51,6 +62,13 @@ d3.distanceLimitedVoronoi = function () {
   _distanceLimitedVoronoi.voronoi = function(_) {
     if (!arguments.length) { return voronoi; }
     voronoi = _;
+
+    return _distanceLimitedVoronoi;
+  };
+
+  _distanceLimitedVoronoi.context = function(_) {
+    if (!arguments.length) { return context; }
+    context = _;
 
     return _distanceLimitedVoronoi;
   };
