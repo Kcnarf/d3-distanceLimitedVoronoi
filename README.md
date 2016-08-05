@@ -37,7 +37,7 @@ var limitedCells = limitedVoronoi(data)       // compute the layout; return an a
                                                 // and 'datum' is the datum
 ```
 
-Finally, in your javascript, in order to draw the (interactive) regions:
+Later, in your javascript, in order to draw the (interactive) regions on an SVG:
 ```javascript
 d3.selectAll("interactive-region")
   .data(limitedCells)
@@ -46,6 +46,17 @@ d3.selectAll("interactive-region")
       .attr("d", function(d) { return d.path; })
       .on('mouseenter', ...)
       .on('mouseout', ...)
+```
+, or in order to draw the regions on a Canvas:
+```javascript
+var canvas = document.querySelector("#worms canvas");
+var context = canvas.getContext("2d");
+limitedVoronoi.context(context);              //set the context to render to
+
+context.strokeStyle = 'grey';
+context.beginPath();
+limitedVoronoi(data);
+context.fill();
 ```
 
 ## Reference
@@ -60,12 +71,17 @@ Creates a new distanceLimitedVoronoi diagram with the default settings:
 ```javascript
 voronoi = d3.voronoi().extent([[-1e6,-1e6], [1e6,1e6]]);
 limit = 20;
+context = null;       // set it to render to a canvas' 2D context
 ```
 
 
 <a name="distanceLimitedVoronoi_" href="#distanceLimitedVoronoi_">#</a> <i>distanceLimitedVoronoi</i>(data)
 
 Computes the distanceLimitedVoronoi tesselation for the specified _data_ points.
+
+If the _context_ of the layout is null, returns an array of ```{path: , datum: }```, where ```path``` is the adequate region around the datum and ```datum``` is the datum.
+
+If the _context_ of the layout is defined, the layout is supposed to be drawn on a Canvas. Hence the layout defines a new path, composed of each adequate regions, and return ```true```. Note that the layout doesn't ```stroke()``` (or ```fill()```, or anything else ...) on its own in the case you don't want to fill regions. The use of the produced path remains at your charge.
 
 
 <a name="distanceLimitedVoronoi_limit" href="#distanceLimitedVoronoi_limit">#</a> <i>distanceLimitedVoronoi.</i><b>limit</b>([radius])
@@ -76,6 +92,11 @@ If _radius_ is specified, set the _limit_ (ie. maximum distance) of each cell an
 <a name="distanceLimitedVoronoi_voronoi" href="#distanceLimitedVoronoi_voronoi">#</a> <i>distanceLimitedVoronoi.</i><b>voronoi</b>([voronoi])
 
 If _voronoi_ is specified, set the voronoi layout used by the distanceLimitedVoronoi and returns it. If _voronoi_ is not specified, return the currently used voronoi, which defaults to ```d3.voronoi().extent([[-1e6,-1e6], [1e6,1e6]])```.
+
+
+<a name="distanceLimitedVoronoi_context" href="#distanceLimitedVoronoi_context">#</a> <i>distanceLimitedVoronoi.</i><b>context</b>([context])
+
+If _context_ is specified, set the context used by the distanceLimitedVoronoi to draw each distance-limited cell, and returns it. The context must be a 2D canvas context (for canvas rendering), or ```null```(for SVG rendering). If _context_ is not specified, return the currently used context, which defaults to ```null```.
 
 
 <a name="distanceLimitedVoronoi_x" href="#distanceLimitedVoronoi_x">#</a> <i>distanceLimitedVoronoi.</i><b>x</b>([callback])
