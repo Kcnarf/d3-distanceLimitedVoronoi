@@ -5,7 +5,7 @@ d3.distanceLimitedVoronoi = function () {
   var context = null;         // set it to render to a canvas' 2D context
 
   function _distanceLimitedVoronoi (data) {
-    if (!context===null) {
+    if (context!=null) {
       //renders into a Canvas
       context.beginPath();
       voronoi.polygons(data).forEach(function(cell) {
