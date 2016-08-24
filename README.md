@@ -11,6 +11,11 @@ As stated in the first sentence of the README file of the [d3-voronoi repository
 
 But this cited example also shows that interactive regions should be close to each point/subjectOfMatter. In other words, if the interactive region is far away from the subject of matter, interaction becomes confusing.
 
+As an image tells more than thousands words:
+<p align="center" border="solid red 1px">
+![Explanation](./img/explanation.png)
+</p>
+
 In its example, Nate Vack uses SVG's clipPath technique to cut off Voronoï-based interactive regions. This plugin mimic the final result by computing the adequate distance-limited region around each subject of matter. The adequate region is the intersection area between the Voronoï cell and a max-distance circle.
 
 Finally, I highly encourage everyone to also take a look at [Using a D3 Voronoi grid to improve a chart's interactive experience](http://www.visualcinnamon.com/2015/07/voronoi.html), from [Nadieh Bremer (visualcinnamon.com)](http://www.visualcinnamon.com/about), where everyone will find a step-by-step use of this technique on a concrete use case.
