@@ -11,7 +11,7 @@ As stated in the first sentence of the README file of the [d3-voronoi repository
 
 But this cited example also shows that interactive regions should be close to each point/subjectOfMatter. In other words, if the interactive region is far away from the subject of matter, interaction becomes confusing.
 
-As an image tells more than thousands words:
+Because a picture is worth a thousand words:
 
 ![Explanation](./img/explanation.png)
 
