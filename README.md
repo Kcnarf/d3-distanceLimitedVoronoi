@@ -1,6 +1,10 @@
 # d3-distanceLimitedVoronoi
 D3 plugin which computes a Voronoi tesselation where each cell defines a region inside a given distance.
 
+Because a picture is worth a thousand words:
+
+![Explanation](./img/explanation.png)
+
 This page (as the all _master branch_) concerns the plugin's version compatible with __d3v4__. Switch to the [_d3v3 branch_](https://github.com/Kcnarf/d3-distanceLimitedVoronoi/tree/d3v3) for the version compatible with __d3v3__.
 
 ## Context
@@ -10,10 +14,6 @@ As stated in the first sentence of the README file of the [d3-voronoi repository
 > Voronoi layouts are particularly useful for invisible interactive regions, as demonstrated in Nate Vack’s [Voronoi picking](http://bl.ocks.org/njvack/1405439) example
 
 But this cited example also shows that interactive regions should be close to each point/subjectOfMatter. In other words, if the interactive region is far away from the subject of matter, interaction becomes confusing.
-
-Because a picture is worth a thousand words:
-
-![Explanation](./img/explanation.png)
 
 In its example, Nate Vack uses SVG's clipPath technique to cut off Voronoï-based interactive regions. This plugin mimic the final result by computing the adequate distance-limited region around each subject of matter. The adequate region is the intersection area between the Voronoï cell and a max-distance circle.
 
@@ -46,7 +46,7 @@ var limitedCells = limitedVoronoi(data)       // compute the layout; return an a
 
 Later, in your javascript, in order to draw the (interactive) regions on an SVG:
 ```javascript
-d3.selectAll("interactive-region")
+d3.selectAll(".interactive-region")
   .data(limitedCells)
   .enter()
     .append("path")
@@ -56,14 +56,14 @@ d3.selectAll("interactive-region")
 ```
 , or in order to draw the regions on a Canvas:
 ```javascript
-var canvas = document.querySelector("#worms canvas");
+var canvas = document.querySelector("#my-canvas");
 var context = canvas.getContext("2d");
 limitedVoronoi.context(context);              //set the context to render to
 
-context.strokeStyle = 'grey';
+context.strokeStyle = 'lightblue';
 context.beginPath();
 limitedVoronoi(data);
-context.fill();
+context.stroke();
 ```
 
 ## Reference
