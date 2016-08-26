@@ -4,15 +4,24 @@ d3.distanceLimitedVoronoi = function () {
   var limit = 20;             // default limit
   var context = null;         // set it to render to a canvas' 2D context
 
-  function _distanceLimitedVoronoi (data) {
+  function _distanceLimitedVoronoi (_) {
+    var data = arguments[0];
+    if (arguments.length >= 2) { var beforeEachCallback = arguments[1]; }
+    if (arguments.length >= 3) { var afterEachCallback = arguments[2]; }
+
     if (context!=null) {
       //renders into a Canvas
-      context.beginPath();
-      voronoi.polygons(data).forEach(function(cell) {
+      voronoi.polygons(data).forEach(function(cell, i) {
+        if (beforeEachCallback) {
+          beforeEachCallback(context, cell.data, i);
+        }
         distanceLimitedCell(cell, limit, context);
+        if (afterEachCallback) {
+        	afterEachCallback(context, cell.data, i);
+        }
       });
       return true;
-    } else {
+    }  else {
       //final viz is an SVG
       return voronoi.polygons(data).map(function(cell) {
         return {
